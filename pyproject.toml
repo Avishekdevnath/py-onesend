@@ -9,3 +9,7 @@ dependencies = []
 
 [project.scripts]
 pyonesend = "pyonesend.cli:main" 
+
+[project.optional-dependencies]
+encryption = ["pyminizip"]
+qr = ["qrcode"] 

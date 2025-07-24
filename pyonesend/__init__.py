@@ -10,7 +10,7 @@ import time
 import requests
 from .server import OneSendServer, OneSendConfig
 
-def send_files_or_folders(paths, port=9000, max_downloads=5, password=None, delete_after=True, tunnel_ngrok=False, output=None):
+def send_files_or_folders(paths, port=9000, max_downloads=5, password=None, delete_after=True, tunnel_ngrok=False, output=None, encrypt_zip=False, show_qr=False):
     """
     Programmatically send multiple files/folders as a single zip archive.
     If tunnel_ngrok=True, launches ngrok and returns the public URL.
@@ -59,6 +59,21 @@ def send_files_or_folders(paths, port=9000, max_downloads=5, password=None, dele
         print(f"[i] Zipped files/folders {file_paths} to '{zip_path}' for transfer.")
         file_path = zip_path
         cleanup_zip = zip_path if not output_zip else None
+    # After zip_path and file_path are set, before server config:
+    if encrypt_zip:
+        if not password:
+            raise ValueError('Password is required for encrypted zip.')
+        try:
+            import pyminizip
+        except ImportError:
+            print('[!] pyminizip not installed. Creating unencrypted zip.')
+            pyminizip = None
+        if pyminizip:
+            pyminizip.compress(file_path, None, zip_path, password, 5)
+            file_path = zip_path
+        else:
+            # fallback: already zipped, just warn
+            pass
     ngrok_proc = None
     public_url = None
     if tunnel_ngrok:
@@ -97,4 +112,7 @@ def send_files_or_folders(paths, port=9000, max_downloads=5, password=None, dele
         os.remove(cleanup_zip)
     if ngrok_proc:
         ngrok_proc.terminate()
+    if show_qr:
+        from .utils import show_qr_code
+        show_qr_code(public_url or local_url)
     return local_url, (f"{public_url}/download?token={server.token}" if public_url else None), server.token 

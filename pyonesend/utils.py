@@ -34,9 +34,9 @@ def show_qr_code(url):
         qr = qrcode.QRCode()
         qr.add_data(url)
         qr.make()
-        qr.print_ascii()
+        qr.print_ascii(invert=True)
     except ImportError:
-        print("[!] qrcode module not found. Showing URL only:")
+        print('[!] qrcode module not installed. Showing URL only:')
         print(url)
 
 def start_expiry_timer(httpd, seconds):

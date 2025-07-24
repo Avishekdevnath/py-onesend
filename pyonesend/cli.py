@@ -31,6 +31,10 @@ def main():
     parser.add_argument('--output', help='Optional output zip file name (e.g., myarchive.zip)')
     args = parser.parse_args()
 
+    if args.encrypt_zip and not args.password:
+        import getpass
+        args.password = getpass.getpass('Enter password for encrypted zip: ')
+
     ngrok_proc = None
     public_url = None
     if args.tunnel == 'ngrok':
@@ -93,10 +97,10 @@ def main():
         cert_path=args.cert,
         key_path=args.key,
         expire_after=args.expire_after,
-        encrypt_zip=args.encrypt_zip,
-        show_qr=args.show_qr,
+        encrypt_zip=args.encrypt_zip if hasattr(args, 'encrypt_zip') else False,
+        show_qr=args.show_qr if hasattr(args, 'show_qr') else False,
         delete_after=args.delete_after,
-        domain=args.domain
+        domain=args.domain if hasattr(args, 'domain') else None
     )
 
     server = OneSendServer(config)

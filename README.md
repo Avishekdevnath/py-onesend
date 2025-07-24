@@ -2,6 +2,17 @@
 
 **pyonesend** is a Python package and CLI tool for secure, one-time or limited-use file and folder sharing. Instantly generate a public download link (via ngrok) for any file or folder on your machine—no third-party dependencies required.
 
+## Features
+- One-time or limited-use download links
+- Public link via ngrok (works globally)
+- Password protection (optional)
+- Smart or custom zip naming
+- CLI and importable API
+- Download limit
+- Optional encrypted ZIPs (`pyminizip`)
+- Optional QR code output (`qrcode`)
+- No third-party dependencies (except optional ngrok, pyminizip, qrcode)
+
 ---
 
 ## Why pyonesend?
@@ -10,17 +21,6 @@
 - **No cloud upload**: Your files never leave your machine until downloaded.
 - **Works globally**: Public link via ngrok, accessible from anywhere.
 - **No dependencies**: Pure Python, ngrok is optional.
-
----
-
-## Features
-- One-time or limited-use download links
-- Public link via ngrok (works globally)
-- Password protection (optional)
-- Smart or custom zip naming
-- CLI and importable API
-- Download limit
-- No third-party dependencies (except optional ngrok)
 
 ---
 
@@ -167,3 +167,148 @@ A: Use the import example with `input("Press Enter to exit...")` to keep the tun
 
 ## License
 MIT 
+
+---
+
+## Optional Features & Usage Examples
+
+### Encrypted ZIPs (Password-Protected)
+
+To enable password-protected zips, install the optional dependency:
+```sh
+pip install pyonesend[encryption]
+```
+
+**CLI Example:**
+```sh
+python -m pyonesend.cli --file Profile --encrypt-zip --password secret123 --tunnel ngrok
+```
+
+**Import/API Example:**
+```python
+from pyonesend import send_files_or_folders
+send_files_or_folders([
+    'Profile'
+], encrypt_zip=True, password='secret123')
+```
+
+---
+
+### QR Code Output
+
+To enable QR code output, install the optional dependency:
+```sh
+pip install pyonesend[qr]
+```
+
+**CLI Example:**
+```sh
+python -m pyonesend.cli --file Profile --show-qr --tunnel ngrok
+```
+
+**Import/API Example:**
+```python
+from pyonesend import send_files_or_folders
+send_files_or_folders([
+    'Profile'
+], show_qr=True)
+```
+
+--- 
+
+---
+
+## More Usage Examples
+
+### Expiry Timer (Auto-Shutdown)
+
+**CLI Example:**
+```sh
+python -m pyonesend.cli --file Profile --expire-after 60 --tunnel ngrok
+```
+
+**Import/API Example:**
+```python
+from pyonesend import send_files_or_folders
+send_files_or_folders([
+    'Profile'
+], expire_after=60)
+```
+
+---
+
+### Multiple Files/Folders
+
+**CLI Example:**
+```sh
+python -m pyonesend.cli --file Profile Docs file.txt --output myfiles.zip --tunnel ngrok
+```
+
+**Import/API Example:**
+```python
+from pyonesend import send_files_or_folders
+send_files_or_folders([
+    'Profile', 'Docs', 'file.txt'
+], output='myfiles.zip')
+```
+
+---
+
+### Custom Zip Name
+
+**CLI Example:**
+```sh
+python -m pyonesend.cli --file Profile --output myarchive.zip --tunnel ngrok
+```
+
+**Import/API Example:**
+```python
+from pyonesend import send_files_or_folders
+send_files_or_folders([
+    'Profile'
+], output='myarchive.zip')
+```
+
+---
+
+### Password-Protected Download (Without Encryption)
+
+**CLI Example:**
+```sh
+python -m pyonesend.cli --file Profile --password secret123 --tunnel ngrok
+```
+
+**Import/API Example:**
+```python
+from pyonesend import send_files_or_folders
+send_files_or_folders([
+    'Profile'
+], password='secret123')
+```
+
+---
+
+### Combine Features (All-in-One)
+
+**CLI Example:**
+```sh
+python -m pyonesend.cli --file Profile --output secure.zip --encrypt-zip --password secret123 --show-qr --expire-after 120 --max-downloads 3 --tunnel ngrok
+```
+
+**Import/API Example:**
+```python
+from pyonesend import send_files_or_folders
+send_files_or_folders([
+    'Profile'
+],
+    output='secure.zip',
+    encrypt_zip=True,
+    password='secret123',
+    show_qr=True,
+    expire_after=120,
+    max_downloads=3,
+    tunnel_ngrok=True
+)
+```
+
+--- 

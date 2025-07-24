@@ -7,9 +7,15 @@ import ssl
 import threading
 import socket
 import http.server
+import time
 from dataclasses import dataclass
 from pyonesend.security import generate_token, check_password, generate_self_signed_cert
 from pyonesend.utils import build_download_url, show_qr_code, start_expiry_timer
+import zipfile
+try:
+    import pyminizip
+except ImportError:
+    pyminizip = None
 
 @dataclass
 class OneSendConfig:
@@ -42,6 +48,21 @@ class OneSendServer:
             print(f"[!] Warning: {e}. Running in HTTP (insecure) mode for local development.")
             return None, None
 
+    def _zip_with_encryption(self, src_path, dest_zip, password):
+        if pyminizip:
+            pyminizip.compress(src_path, None, dest_zip, password, 5)
+        else:
+            print('[!] pyminizip not installed. Creating unencrypted zip.')
+            with zipfile.ZipFile(dest_zip, 'w', zipfile.ZIP_DEFLATED) as zf:
+                if os.path.isdir(src_path):
+                    for root, _, files in os.walk(src_path):
+                        for file in files:
+                            abs_path = os.path.join(root, file)
+                            arcname = os.path.relpath(abs_path, os.path.dirname(src_path))
+                            zf.write(abs_path, arcname)
+                else:
+                    zf.write(src_path, os.path.basename(src_path))
+
     def run(self):
         handler = self._make_handler()
         self.httpd = http.server.HTTPServer(("", self.config.port), handler)
@@ -60,7 +81,11 @@ class OneSendServer:
         if self.config.show_qr:
             show_qr_code(url)
         if self.config.expire_after:
-            start_expiry_timer(self.httpd, self.config.expire_after)
+            def shutdown_after():
+                time.sleep(self.config.expire_after)
+                print(f"\n[!] Server expired after {self.config.expire_after} seconds.")
+                self.httpd.shutdown()
+            threading.Thread(target=shutdown_after, daemon=True).start()
         try:
             self.httpd.serve_forever()
         except KeyboardInterrupt:
