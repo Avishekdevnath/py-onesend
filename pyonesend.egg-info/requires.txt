@@ -1,0 +1,6 @@
+
+[encryption]
+pyminizip
+
+[qr]
+qrcode

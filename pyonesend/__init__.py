@@ -1,5 +1,6 @@
 """
-py-onesend: Secure, one-time file transfer over HTTPS (no third-party dependencies)
+pyonesend - Secure, one-time file/folder transfer
+Author: avishek devnath <avishekdevnath@gmail.com>
 """
 
 import os

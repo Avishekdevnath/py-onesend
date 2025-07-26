@@ -1,0 +1,14 @@
+LICENSE
+README.md
+pyproject.toml
+pyonesend/__init__.py
+pyonesend/cli.py
+pyonesend/security.py
+pyonesend/server.py
+pyonesend/utils.py
+pyonesend.egg-info/PKG-INFO
+pyonesend.egg-info/SOURCES.txt
+pyonesend.egg-info/dependency_links.txt
+pyonesend.egg-info/entry_points.txt
+pyonesend.egg-info/requires.txt
+pyonesend.egg-info/top_level.txt

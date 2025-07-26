@@ -1,3 +1,17 @@
+Metadata-Version: 2.4
+Name: pyonesend
+Version: 1.0.1
+Summary: Secure, one-time file/folder transfer with public download links and CLI or importable API.
+Author-email: avishek devnath <avishekdevnath@gmail.com>
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Provides-Extra: encryption
+Requires-Dist: pyminizip; extra == "encryption"
+Provides-Extra: qr
+Requires-Dist: qrcode; extra == "qr"
+Dynamic: license-file
+
 # pyonesend
 
 **Author:** avishek devnath <avishekdevnath@gmail.com>

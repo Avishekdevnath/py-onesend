@@ -1,8 +1,8 @@
 [project]
 name = "pyonesend"
-version = "1.0.0"
+version = "1.0.1"
 description = "Secure, one-time file/folder transfer with public download links and CLI or importable API."
-authors = [{name = "Your Name", email = "your@email.com"}]
+authors = [{name = "avishek devnath", email = "avishekdevnath@gmail.com"}]
 readme = "README.md"
 requires-python = ">=3.7"
 dependencies = []
@@ -13,3 +13,6 @@ pyonesend = "pyonesend.cli:main"
 [project.optional-dependencies]
 encryption = ["pyminizip"]
 qr = ["qrcode"] 
+
+[tool.setuptools]
+packages = ["pyonesend"] 
